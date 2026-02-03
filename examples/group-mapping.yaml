@@ -1,0 +1,55 @@
+# Example group-mapping.yaml
+# Maps Identity Provider groups to Octelium groups with policies
+#
+# Each group entry can have:
+#   octeliumGroup: string   - Target name in Octelium (default: same as key)
+#   displayName: string     - Human-readable name (default: same as key)
+#   policies: string[]      - Policies to attach to the group
+#   sync: boolean           - Whether to sync (default: true)
+
+groups:
+  # DevOps team - full access
+  devops:
+    displayName: "DevOps Team"
+    policies:
+      - allow-all
+
+  # Developers - access to Grafana and dev databases
+  developers:
+    octeliumGroup: developer  # rename group in Octelium
+    displayName: "Developers"
+    policies:
+      - grafana
+      - dev-db
+
+  # Grafana administrators
+  grafana-admins:
+    displayName: "Grafana Admins"
+    policies:
+      - grafana
+      - allow-all
+
+  # Grafana viewers - read only access
+  grafana-viewers:
+    displayName: "Grafana Viewers"
+    policies:
+      - grafana
+
+  # Service accounts - do not sync to Octelium
+  service-accounts:
+    sync: false
+
+  # Internal admin groups - skip
+  internal-admins:
+    sync: false
+
+# Default behavior for groups not listed above
+defaults:
+  # What to do with unmapped groups:
+  #   skip              - Don't sync groups not in mapping (default)
+  #   include           - Sync with defaultPolicies
+  #   include-no-policies - Sync without any policies
+  unmappedGroups: skip
+  
+  # Default policies for groups without explicit policies
+  defaultPolicies: []
