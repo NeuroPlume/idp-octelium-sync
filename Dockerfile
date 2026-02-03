@@ -21,8 +21,8 @@ WORKDIR /app
 # Copy compiled binary
 COPY --from=builder /app/idp-octelium-sync ./
 
-# Create non-root user
-RUN useradd -r -u 1000 sync
-USER sync
+# Create non-root user (use different name to avoid conflicts)
+RUN useradd -r -u 1001 -s /bin/false appuser
+USER appuser
 
 ENTRYPOINT ["./idp-octelium-sync"]
